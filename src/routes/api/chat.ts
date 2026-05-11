@@ -16,7 +16,7 @@ export const Route = createFileRoute("/api/chat")({
 
         const gateway = createLovableAiGatewayProvider(key);
         const result = streamText({
-          model: gateway("google/gemini-3-flash-preview"),
+          model: gateway("google/gemini-3.1-pro-preview"),
           system:
             "You are a helpful, concise AI assistant. Format responses in clean markdown when helpful.",
           messages: await convertToModelMessages(messages),
