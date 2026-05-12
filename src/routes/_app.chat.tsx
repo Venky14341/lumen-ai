@@ -106,14 +106,12 @@ function ChatPage() {
   const [initialMessages, setInitialMessages] = useState<UIMessage[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [input, setInput] = useState("");
-  const [model, setModel] = useState<string>(
-    () => {
-      const savedModel = localStorage.getItem("lumen.model");
-      return savedModel === "google/gemini-3.1-pro-preview" || !savedModel
-        ? DEFAULT_MODEL
-        : savedModel;
-    },
-  );
+  const [model, setModel] = useState<string>(() => {
+    const savedModel = localStorage.getItem("lumen.model");
+    return savedModel === "google/gemini-3.1-pro-preview" || !savedModel
+      ? DEFAULT_MODEL
+      : savedModel;
+  });
   const [persona, setPersona] = useState<string>(
     () => localStorage.getItem("lumen.persona") ?? "default",
   );
