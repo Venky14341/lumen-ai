@@ -144,9 +144,15 @@ function ChatPage() {
     if (user) loadConversations();
   }, [user]);
 
+  const skipNextLoadRef = useRef(false);
   useEffect(() => {
     if (!activeId) {
       setInitialMessages([]);
+      setHydrated(true);
+      return;
+    }
+    if (skipNextLoadRef.current) {
+      skipNextLoadRef.current = false;
       setHydrated(true);
       return;
     }
