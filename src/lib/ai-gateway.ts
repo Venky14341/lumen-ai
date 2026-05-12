@@ -1,11 +1,8 @@
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 
-export const createLovableAiGatewayProvider = (lovableApiKey: string) =>
+export const createGeminiProvider = (apiKey: string) =>
   createOpenAICompatible({
-    name: "lovable",
-    baseURL: "https://ai.gateway.lovable.dev/v1",
-    headers: {
-      "Lovable-API-Key": lovableApiKey,
-      "X-Lovable-AIG-SDK": "vercel-ai-sdk",
-    },
+    name: "gemini",
+    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+    apiKey,
   });

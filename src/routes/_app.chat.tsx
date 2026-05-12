@@ -74,14 +74,12 @@ type Conversation = {
 type DbMessage = { id: string; role: string; content: string; created_at: string };
 
 const MODELS = [
-  { id: "google/gemini-3-flash-preview", label: "Lumen Fast (recommended)" },
-  { id: "google/gemini-3.1-pro-preview", label: "Lumen Pro (deeper)" },
-  { id: "google/gemini-3.1-flash-lite-preview", label: "Lumen Lite" },
-  { id: "openai/gpt-5", label: "GPT-5" },
-  { id: "openai/gpt-5-mini", label: "GPT-5 mini" },
+  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash (recommended)" },
+  { id: "gemini-2.5-pro", label: "Gemini 2.5 Pro" },
+  { id: "gemini-2.0-flash", label: "Gemini 2.0 Flash" },
 ];
 
-const DEFAULT_MODEL = "google/gemini-3-flash-preview";
+const DEFAULT_MODEL = "gemini-2.5-flash";
 
 const PERSONAS = [
   { id: "default", label: "Default", icon: "✨" },
@@ -108,9 +106,7 @@ function ChatPage() {
   const [input, setInput] = useState("");
   const [model, setModel] = useState<string>(() => {
     const savedModel = localStorage.getItem("lumen.model");
-    return savedModel === "google/gemini-3.1-pro-preview" || !savedModel
-      ? DEFAULT_MODEL
-      : savedModel;
+    return savedModel && MODELS.some((m) => m.id === savedModel) ? savedModel : DEFAULT_MODEL;
   });
   const [persona, setPersona] = useState<string>(
     () => localStorage.getItem("lumen.persona") ?? "default",

@@ -1,17 +1,15 @@
 import "@tanstack/react-start";
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
+import { createGeminiProvider } from "@/lib/ai-gateway";
 
 const ALLOWED_MODELS = new Set([
-  "google/gemini-3.1-pro-preview",
-  "google/gemini-3-flash-preview",
-  "google/gemini-3.1-flash-lite-preview",
-  "openai/gpt-5",
-  "openai/gpt-5-mini",
+  "gemini-2.5-flash",
+  "gemini-2.5-pro",
+  "gemini-2.0-flash",
 ]);
 
-const DEFAULT_MODEL = "google/gemini-3-flash-preview";
+const DEFAULT_MODEL = "gemini-2.5-flash";
 
 const PERSONAS: Record<string, string> = {
   default:
@@ -39,8 +37,8 @@ export const Route = createFileRoute("/api/chat")({
         if (!Array.isArray(messages)) {
           return new Response("Messages required", { status: 400 });
         }
-        const key = process.env.LOVABLE_API_KEY;
-        if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
+        const key = process.env.GEMINI_API_KEY;
+        if (!key) return new Response("Missing GEMINI_API_KEY", { status: 500 });
 
         const chosenModel = modelId && ALLOWED_MODELS.has(modelId) ? modelId : DEFAULT_MODEL;
         const today = new Intl.DateTimeFormat("en-US", {
@@ -52,7 +50,7 @@ export const Route = createFileRoute("/api/chat")({
         }).format(new Date());
         const system = `${PERSONAS[persona ?? "default"] ?? PERSONAS.default}\n\nCurrent date: ${today} (UTC). Current year: ${new Date().getUTCFullYear()}. Use this as the source of truth for current-date questions. If asked for very recent real-world facts you cannot verify from context, be honest and say the information may need checking.`;
 
-        const gateway = createLovableAiGatewayProvider(key);
+        const gateway = createGeminiProvider(key);
         const result = streamText({
           model: gateway(chosenModel),
           system,
