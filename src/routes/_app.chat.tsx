@@ -144,9 +144,15 @@ function ChatPage() {
     if (user) loadConversations();
   }, [user]);
 
+  const skipNextLoadRef = useRef(false);
   useEffect(() => {
     if (!activeId) {
       setInitialMessages([]);
+      setHydrated(true);
+      return;
+    }
+    if (skipNextLoadRef.current) {
+      skipNextLoadRef.current = false;
       setHydrated(true);
       return;
     }
@@ -328,6 +334,7 @@ function ChatPage() {
         .single();
       if (error || !data) return toast.error(error?.message ?? "Failed");
       convId = data.id;
+      skipNextLoadRef.current = true;
       setActiveId(convId);
     }
     await supabase.from("messages").insert({
