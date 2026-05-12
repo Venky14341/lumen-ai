@@ -27,6 +27,11 @@ const PERSONAS: Record<string, string> = {
 export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
+      GET: async () =>
+        Response.json({
+          success: true,
+          message: "API is working on Vercel",
+        }),
       POST: async ({ request }: { request: Request }) => {
         const body = (await request.json()) as {
           messages?: UIMessage[];
