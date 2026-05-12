@@ -107,10 +107,10 @@ function ChatPage() {
   const [hydrated, setHydrated] = useState(false);
   const [input, setInput] = useState("");
   const [model, setModel] = useState<string>(
-    () => localStorage.getItem("lumen.model") ?? DEFAULT_MODEL
+    () => localStorage.getItem("lumen.model") ?? DEFAULT_MODEL,
   );
   const [persona, setPersona] = useState<string>(
-    () => localStorage.getItem("lumen.persona") ?? "default"
+    () => localStorage.getItem("lumen.persona") ?? "default",
   );
   const [search, setSearch] = useState("");
   const [renamingId, setRenamingId] = useState<string | null>(null);
@@ -171,7 +171,7 @@ function ChatPage() {
         api: "/api/chat",
         body: () => ({ model, persona }),
       }),
-    [model, persona]
+    [model, persona],
   );
   const chatId = activeId ?? "new";
 
@@ -189,9 +189,7 @@ function ChatPage() {
       if (!user) return;
       const convId = activeIdRef.current;
       if (!convId) return;
-      const text = message.parts
-        .map((p) => (p.type === "text" ? p.text : ""))
-        .join("");
+      const text = message.parts.map((p) => (p.type === "text" ? p.text : "")).join("");
       await supabase.from("messages").insert({
         conversation_id: convId,
         user_id: user.id,
@@ -240,8 +238,7 @@ function ChatPage() {
   };
 
   const toggleVoice = () => {
-    const SR =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SR) {
       toast.error("Voice input not supported in this browser");
       return;
@@ -368,7 +365,7 @@ function ChatPage() {
         .delete()
         .in(
           "id",
-          toDelete.map((m) => m.id)
+          toDelete.map((m) => m.id),
         );
     }
     setMessages(messages.slice(0, lastUserIdx + 1));
@@ -381,7 +378,7 @@ function ChatPage() {
   }, [messages, isLoading]);
 
   const filteredConvs = conversations.filter((c) =>
-    c.title.toLowerCase().includes(search.toLowerCase())
+    c.title.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -419,7 +416,7 @@ function ChatPage() {
                 key={c.id}
                 className={cn(
                   "group flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors hover:bg-accent",
-                  activeId === c.id && "bg-accent"
+                  activeId === c.id && "bg-accent",
                 )}
               >
                 {renamingId === c.id ? (
@@ -493,7 +490,12 @@ function ChatPage() {
         </ScrollArea>
         <div className="border-t border-sidebar-border p-3">
           <div className="mb-2 truncate px-2 text-xs text-muted-foreground">{user?.email}</div>
-          <Button onClick={signOut} variant="ghost" size="sm" className="w-full justify-start gap-2">
+          <Button
+            onClick={signOut}
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start gap-2"
+          >
             <LogOut className="size-4" /> Sign out
           </Button>
         </div>
@@ -584,9 +586,7 @@ function ChatPage() {
             ) : (
               <div className="space-y-6">
                 {messages.map((m) => {
-                  const text = m.parts
-                    .map((p) => (p.type === "text" ? p.text : ""))
-                    .join("");
+                  const text = m.parts.map((p) => (p.type === "text" ? p.text : "")).join("");
                   return (
                     <MessageRow
                       key={m.id}
@@ -638,7 +638,13 @@ function ChatPage() {
                   {listening ? <MicOff className="size-4" /> : <Mic className="size-4" />}
                 </Button>
                 {isLoading ? (
-                  <Button size="icon" variant="destructive" onClick={() => stop()} className="size-9" title="Stop">
+                  <Button
+                    size="icon"
+                    variant="destructive"
+                    onClick={() => stop()}
+                    className="size-9"
+                    title="Stop"
+                  >
                     <Square className="size-4" />
                   </Button>
                 ) : (
@@ -711,13 +717,9 @@ function MessageRow({
       <div
         className={cn(
           "grid size-8 shrink-0 place-items-center rounded-lg text-xs font-medium",
-          role === "user"
-            ? "bg-secondary text-secondary-foreground"
-            : "text-primary-foreground"
+          role === "user" ? "bg-secondary text-secondary-foreground" : "text-primary-foreground",
         )}
-        style={
-          role === "assistant" ? { background: "var(--gradient-primary)" } : undefined
-        }
+        style={role === "assistant" ? { background: "var(--gradient-primary)" } : undefined}
       >
         {role === "user" ? "You" : <Sparkles className="size-4" />}
       </div>
