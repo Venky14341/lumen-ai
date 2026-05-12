@@ -11,6 +11,8 @@ const ALLOWED_MODELS = new Set([
   "openai/gpt-5-mini",
 ]);
 
+const DEFAULT_MODEL = "google/gemini-3-flash-preview";
+
 const PERSONAS: Record<string, string> = {
   default:
     "You are Lumen, a helpful, concise AI assistant. Format responses in clean markdown when helpful.",
@@ -40,9 +42,15 @@ export const Route = createFileRoute("/api/chat")({
         const key = process.env.LOVABLE_API_KEY;
         if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
 
-        const chosenModel =
-          modelId && ALLOWED_MODELS.has(modelId) ? modelId : "google/gemini-3.1-pro-preview";
-        const system = PERSONAS[persona ?? "default"] ?? PERSONAS.default;
+        const chosenModel = modelId && ALLOWED_MODELS.has(modelId) ? modelId : DEFAULT_MODEL;
+        const today = new Intl.DateTimeFormat("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          timeZone: "UTC",
+        }).format(new Date());
+        const system = `${PERSONAS[persona ?? "default"] ?? PERSONAS.default}\n\nCurrent date: ${today} (UTC). Current year: ${new Date().getUTCFullYear()}. Use this as the source of truth for current-date questions. If asked for very recent real-world facts you cannot verify from context, be honest and say the information may need checking.`;
 
         const gateway = createLovableAiGatewayProvider(key);
         const result = streamText({
